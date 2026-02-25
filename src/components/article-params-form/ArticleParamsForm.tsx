@@ -24,14 +24,12 @@ interface ArticleParamsFormProps {
 	isOpen: boolean;
 	onClose: () => void;
 	onApply: (values: ArticleStateType) => void;
-	onReset: () => void;
 }
 
 export const ArticleParamsForm = ({
 	isOpen,
 	onClose,
 	onApply,
-	onReset,
 }: ArticleParamsFormProps) => {
 	const sidebarRef = useRef<HTMLElement>(null);
 
@@ -56,7 +54,7 @@ export const ArticleParamsForm = ({
 
 	const handleReset = () => {
 		setFormValues(defaultArticleState);
-		onReset();
+		onApply(defaultArticleState);
 	};
 
 	const handleApply = () => {
@@ -72,8 +70,14 @@ export const ArticleParamsForm = ({
 					<ArrowButton isOpen={true} onClick={onClose} />
 				</div>
 
-				<form className={styles.form}>
+				<form
+					className={styles.form}
+					onSubmit={(e) => {
+						e.preventDefault();
+						handleApply();
+					}}>
 					{/* Заголовок */}
+
 					<Text as='h2' size={31} weight={800} uppercase>
 						Задать параметры
 					</Text>
@@ -133,18 +137,8 @@ export const ArticleParamsForm = ({
 
 					{/* кнопки */}
 					<div className={styles.bottomContainer}>
-						<Button
-							title='Сбросить'
-							htmlType='reset'
-							type='clear'
-							onClick={handleReset}
-						/>
-						<Button
-							title='Применить'
-							htmlType='button'
-							type='apply'
-							onClick={handleApply}
-						/>
+						<Button title='Сбросить' type='clear' onClick={handleReset} />
+						<Button title='Применить' type='apply' onClick={handleApply} />
 					</div>
 				</form>
 			</aside>
