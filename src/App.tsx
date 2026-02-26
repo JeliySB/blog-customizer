@@ -7,13 +7,8 @@ import { defaultArticleState } from './constants/articleProps';
 import './styles/index.scss';
 import styles from './styles/index.module.scss';
 
-import { ArrowButton } from './ui/arrow-button';
-
 export const App = () => {
-	const [isMenuOpen, setIsMenuOpen] = useState(false); // состояние
 	const [appliedState, setAppliedState] = useState(defaultArticleState);
-
-	const toggle = () => setIsMenuOpen((prev) => !prev);
 
 	const appliedStyles = {
 		'--font-family': appliedState.fontFamilyOption.value,
@@ -25,17 +20,7 @@ export const App = () => {
 
 	return (
 		<main className={styles.main} style={appliedStyles}>
-			{!isMenuOpen && (
-				<div className={styles.arrowButtonWrapper}>
-					<ArrowButton isOpen={false} onClick={toggle} />
-				</div>
-			)}
-
-			<ArticleParamsForm
-				isOpen={isMenuOpen}
-				onClose={toggle}
-				onApply={(values) => setAppliedState(values)}
-			/>
+			<ArticleParamsForm onApply={setAppliedState} />
 			<Article />
 		</main>
 	);

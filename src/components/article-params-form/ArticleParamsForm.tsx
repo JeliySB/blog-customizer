@@ -21,20 +21,18 @@ import { Text } from 'src/ui/text';
 import clsx from 'clsx';
 
 interface ArticleParamsFormProps {
-	isOpen: boolean;
-	onClose: () => void;
 	onApply: (values: ArticleStateType) => void;
 }
 
-export const ArticleParamsForm = ({
-	isOpen,
-	onClose,
-	onApply,
-}: ArticleParamsFormProps) => {
+export const ArticleParamsForm = ({ onApply }: ArticleParamsFormProps) => {
 	const sidebarRef = useRef<HTMLElement>(null);
+
+	const [isOpen, setIsOpen] = useState(false);
 
 	const [formValues, setFormValues] =
 		useState<ArticleStateType>(defaultArticleState);
+
+	const toggle = () => setIsOpen((prev) => !prev);
 
 	// закрытие
 	useEffect(() => {
@@ -44,13 +42,13 @@ export const ArticleParamsForm = ({
 				sidebarRef.current &&
 				!sidebarRef.current.contains(event.target as Node)
 			) {
-				onClose();
+				setIsOpen(false);
 			}
 		};
 
 		document.addEventListener('mousedown', handleClickOutside);
 		return () => document.removeEventListener('mousedown', handleClickOutside);
-	}, [isOpen, onClose]);
+	}, [isOpen]);
 
 	const handleReset = () => {
 		setFormValues(defaultArticleState);
@@ -63,11 +61,16 @@ export const ArticleParamsForm = ({
 
 	return (
 		<>
+			{!isOpen && (
+				<div className={styles.arrowButtonWrapper}>
+					<ArrowButton isOpen={false} onClick={toggle} />
+				</div>
+			)}
 			<aside
 				ref={sidebarRef}
 				className={clsx(styles.container, isOpen && styles.container_open)}>
 				<div className={styles.header}>
-					<ArrowButton isOpen={true} onClick={onClose} />
+					<ArrowButton isOpen={true} onClick={toggle} />
 				</div>
 
 				<form
